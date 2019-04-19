@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
+import axios from 'axios';
+
 const styles = {
   card: {
     marginLeft: 40,
@@ -21,9 +23,21 @@ const styles = {
 };
 
 class Home extends Component {
-  state = {  }
+  state = { 
+    panier: []
+  }
+
+  // TODO recuperer l'email du compte pour attribuer le panier au user
+
+  getRecipeId = (id) => {
+    axios.get(`http://localhost:8012/api/eat/${id}`, {
+    })
+    .then(res => this.setState({ panier : [...this.state.panier, res.data] }))
+  }
+
   render() { 
     const { classes } = this.props;
+    console.log(this.state.panier)
     return ( 
       <div style={{ marginTop: '40px' }} >
         <Grid container>
@@ -40,7 +54,7 @@ class Home extends Component {
                     <Typography gutterBottom variant="h5" component="h2">
                       {obj.title}
                     </Typography>
-                    <Button variant="contained" color="primary" className={classes.button}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.getRecipeId(obj.recipe_id)}>
                       Commander
                     </Button>
                   </CardContent>
