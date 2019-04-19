@@ -36,7 +36,7 @@ class Register extends Component {
 
   handleInputChange = (event) => {
     const { value, name } = event.target;
-    this.setState({error: false, [name]: value });
+    this.setState({ error: false, [name]: value });
   }
 
   onSubmit = e => {

@@ -1,11 +1,10 @@
 ## Like uber eat
 
-###Techno
+### Techno
 - Material-UI
 - React
 - MySQL
 - NodeJS
-
 
 ## Démarrer le projet
 - Clone le projet & l'extraire

@@ -25,7 +25,7 @@ class Home extends Component {
   render() { 
     const { classes } = this.props;
     return ( 
-      <div>
+      <div style={{ marginTop: '40px' }} >
         <Grid container>
           {this.props.data.map((obj, i) => (
             <Grid item xs={3} key={i}>

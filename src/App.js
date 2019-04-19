@@ -8,6 +8,7 @@ import './App.css';
 import Navbar from './components/Navbar';
 import HomeUser from './components/is_login/Home';
 import Home from './components/no_login/Home'
+require('dotenv').config()
 
 class App extends Component {
 
@@ -18,7 +19,7 @@ class App extends Component {
 
   componentDidMount() {
     const getToken = getJwt();
-    jwt.verify(getToken, 'javascript is awesome', (err, decoded) => {
+    jwt.verify(getToken, process.env.REACT_APP_SECRET, (err, decoded) => {
       if (err) {
         console.log('Veuillez vous reconnecter')
         localStorage.clear();
