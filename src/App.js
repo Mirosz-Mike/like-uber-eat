@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import jwt from 'jsonwebtoken';
 
 import { getJwt } from './helpers/jwt';
 import './App.css';
@@ -8,7 +7,6 @@ import './App.css';
 import Navbar from './components/Navbar';
 import HomeUser from './components/is_login/Home';
 import Home from './components/no_login/Home'
-require('dotenv').config()
 
 class App extends Component {
 
@@ -18,19 +16,10 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const getToken = getJwt();
-    jwt.verify(getToken, process.env.REACT_APP_SECRET, (err, decoded) => {
-      if (err) {
-        console.log('Veuillez vous reconnecter')
-        localStorage.clear();
-        this.props.history.push("/")
-      }
-      else {
-        axios.get('http://localhost:8012/api/eat', {
-        })
-        .then(res => this.setState({ data: res.data }))
-      }
-    })
+    const token = getJwt()
+    axios.get(`http://localhost:8012/api/eat?token=${token}`)
+    .then(res => this.setState({ data: res.data }))
+    .catch(error => console.log(error))
   }
 
   logout = () => {
@@ -39,7 +28,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(!!getJwt())
     return (
       <div>
         <Navbar logout={this.logout} />

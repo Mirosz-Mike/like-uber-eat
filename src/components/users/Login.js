@@ -46,7 +46,6 @@ class Login extends Component {
 
     if (email !== '' || password !== '') {
       if (emaildUser.test(email)) {
-        console.log('email ', emaildUser.test(email));
         if (passwordUser.test(password)) {
             fetch('http://localhost:8012/api/authenticate', {
               method: 'POST',
@@ -66,6 +65,7 @@ class Login extends Component {
             .then(body => {
               localStorage.setItem('name', body.name )
               localStorage.setItem('id_token', body.token)
+              localStorage.setItem('userId', body.userId )
               this.props.history.push("/")
             })
             .catch(function(error) {

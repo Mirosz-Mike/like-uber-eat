@@ -1,6 +1,7 @@
 const connexion = require('./../config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+require('dotenv').config()
 
 
 module.exports.authenticate = function(req, res) {
@@ -23,7 +24,8 @@ module.exports.authenticate = function(req, res) {
                 const newToken = jwt.sign({email}, process.env.SECRET_TOKEN_JWT, { expiresIn: '1h' })                
                 return res.status(200).send({
                   token : newToken,
-                  name: results[0].name
+                  name: results[0].name,
+                  userId: results[0].id
                 }).json()
               }
             });  
@@ -44,3 +46,14 @@ module.exports.authenticate = function(req, res) {
     return res.status(403).send('Votre mail est non valide')
   }
 }
+
+// module.exports.verifyToken = function(token) {  
+//   jwt.verify(token, process.env.SECRET_TOKEN_JWT, (err, decoded) => {
+//     if (err) {
+//       console.log(err)
+//       return res.status(403).send(err)
+//     } else {é
+//       console.log('tout va bien')
+//     }
+//   })
+// }

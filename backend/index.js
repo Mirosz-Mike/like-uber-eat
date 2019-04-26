@@ -15,7 +15,7 @@ app.use(cors())
 app.post('/api/register', registerController.register);
 app.post('/api/authenticate', authenticateController.authenticate);
 app.get('/api/eat', dataEatController.data_eat)
-app.get('/api/eat/:id', getRecipeId.getRecipeId);
+app.post('/api/purchase', getRecipeId.getRecipeId);
 
 
 app.listen(8012);

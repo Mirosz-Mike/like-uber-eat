@@ -9,7 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
-import axios from 'axios';
+import { getUserId } from '../../helpers/userId'
+import { getJwt } from '../../helpers/jwt'
 
 const styles = {
   card: {
@@ -22,26 +23,48 @@ const styles = {
   },
 };
 
-class Home extends Component {
+class HomeUser extends Component {
   state = { 
-    panier: []
+    error: false,
+    panier: [],
   }
 
-  // TODO recuperer l'email du compte pour attribuer le panier au user
+  addPurchase = (id, title) => {
+    this.setState({ panier : [...this.state.panier, {id : id}, {title : title}] })
+  }
 
-  getRecipeId = (id) => {
-    axios.get(`http://localhost:8012/api/eat/${id}`, {
+  onSubmit = e => {
+    e.preventDefault();
+    const token = getJwt()
+    const title = this.state.panier.filter(obj =>  obj.title)
+    const finalTab = title.map(obj => obj.title)
+
+    fetch(`http://localhost:8012/api/purchase?token=${token}`, {
+      method: 'POST',
+      body: JSON.stringify({user_id: getUserId(), title: finalTab }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
-    .then(res => this.setState({ panier : [...this.state.panier, res.data] }))
+    .then(res =>{
+      console.log(res)
+      if (res.status === 200) {
+        return res.json();
+      }
+    })
+    .catch(function(error) {
+      console.log('Request failed', error)
+    });
   }
 
   render() { 
     const { classes } = this.props;
-    console.log(this.state.panier)
     return ( 
-      <div style={{ marginTop: '40px' }} >
+      <div style={{ marginTop: '40px' }}>
+        <Typography>Nombre de commande : {this.state.panier.filter(obj => obj.id).length}</Typography>
+        <Button onClick={this.onSubmit}>Valider ma commande</Button>
         <Grid container>
-          {this.props.data.map((obj, i) => (
+          {this.props.data.map((obj, i) => ( 
             <Grid item xs={3} key={i}>
               <Card className={classes.card}>
                 <CardActionArea>
@@ -54,7 +77,7 @@ class Home extends Component {
                     <Typography gutterBottom variant="h5" component="h2">
                       {obj.title}
                     </Typography>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.getRecipeId(obj.recipe_id)}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.addPurchase(obj.id, obj.title)}>
                       Commander
                     </Button>
                   </CardContent>
@@ -68,8 +91,8 @@ class Home extends Component {
   }
 }
  
-Home.propTypes = {
+HomeUser.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(HomeUser);
